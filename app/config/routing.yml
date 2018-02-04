@@ -1,0 +1,4 @@
+fitatu:
+    resource: "@FitatuBundle/Controller/"
+    type:     annotation
+    prefix:   /
