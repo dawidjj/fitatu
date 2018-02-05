@@ -109,4 +109,9 @@ class Category
     {
         return $this->product;
     }
+
+    public function __toString() : string
+    {
+        return $this->getName();
+    }
 }

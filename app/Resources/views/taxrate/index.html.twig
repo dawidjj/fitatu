@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Taxrates list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Value</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for taxRate in taxRates %}
+            <tr>
+                <td><a href="{{ path('taxrate_show', { 'id': taxRate.id }) }}">{{ taxRate.id }}</a></td>
+                <td>{{ taxRate.value }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('taxrate_show', { 'id': taxRate.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('taxrate_edit', { 'id': taxRate.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('taxrate_new') }}">Create a new taxRate</a>
+        </li>
+    </ul>
+{% endblock %}
