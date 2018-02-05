@@ -29,6 +29,13 @@ class Product
     private $name;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="price", type="float", nullable=false)
+     */
+    private $price;
+
+    /**
      * @ORM\ManyToOne(targetEntity="Category", inversedBy="id")
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
      */
@@ -39,6 +46,11 @@ class Product
      * @ORM\JoinColumn(name="tax_rate_id", referencedColumnName="id", nullable=false)
      */
     private $taxRate;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Cart", mappedBy="id")
+     */
+    private $cart;
 
     /**
      * Get id
@@ -122,5 +134,70 @@ class Product
     public function getTaxRate()
     {
         return $this->taxRate;
+    }
+
+    /**
+     * Set price
+     *
+     * @param float $price
+     *
+     * @return Product
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+
+        return $this;
+    }
+
+    /**
+     * Get price
+     *
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->cart = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add cart
+     *
+     * @param \FitatuBundle\Entity\Cart $cart
+     *
+     * @return Product
+     */
+    public function addCart(\FitatuBundle\Entity\Cart $cart)
+    {
+        $this->cart[] = $cart;
+
+        return $this;
+    }
+
+    /**
+     * Remove cart
+     *
+     * @param \FitatuBundle\Entity\Cart $cart
+     */
+    public function removeCart(\FitatuBundle\Entity\Cart $cart)
+    {
+        $this->cart->removeElement($cart);
+    }
+
+    /**
+     * Get cart
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCart()
+    {
+        return $this->cart;
     }
 }
