@@ -13,6 +13,7 @@
                     <th>Price</th>
                     <th>Quantity</th>
                     <th>Sum item</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -22,6 +23,11 @@
                     <td>{{ product.price }} zł</td>
                     <td>{{ product.quantity }}</td>
                     <td>{{ product.sum }} zł</td>
+                    <td>
+                        {{ form_start(product.form, {'name': 'form_' ~ product.id}) }}
+                            <input type="submit" value="Remove from cart">
+                        {{ form_end(product.form) }}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>

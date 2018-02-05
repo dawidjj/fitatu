@@ -29,9 +29,10 @@ class CartController extends Controller
     {
         $cartModel = $this->getCartModel();
         $productsInCart = $cartModel->getProductsAndSortByTaxRate();
+        $productsInCart = $this->addFormToRemove($productsInCart);
 
         return $this->render('cart/list.html.twig', array(
-        	'productsInCart' => $productsInCart
+            'productsInCart' => $productsInCart
         ));
     }
 
@@ -51,6 +52,7 @@ class CartController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
+
             if (isset($data['product_id'])) {
                 $cartModel = $this->getCartModel();
                 $cartModel->addProduct(
@@ -62,12 +64,58 @@ class CartController extends Controller
         return $this->redirectToRoute('cart_list_product');
     }
 
+    /**
+     * Add to cart a product entity.
+     *
+     * @Route("/remove", name="product_remove_from_cart")
+     * @Method("DELETE")
+     */
+    public function removeAction(Request $request)
+    {
+        $params = $request->query->all();
+
+        if (isset($params['id'])) {
+            $cartModel = $this->getCartModel();
+            $cartModel->removeProduct((int) $params['id']);
+        }
+        return $this->redirectToRoute('cart_list_product');
+    }
+
     private function getCartModel() : CartModel
     {
         return new CartModel(
             1,
             1,
-            $this->getDoctrine()->getManager()
+            $this->getDoctrine()->getManager(),
+            new Cart()
         );
+    }
+
+    private function addFormToRemove($productsSortByTaxRate) : array
+    {
+        foreach ($productsSortByTaxRate as $index => $productSortByTaxRate)
+        {
+            if (isset($productSortByTaxRate['products'])) {
+                foreach ($productSortByTaxRate['products'] as $productIndex => $product)
+                {
+                    $form = $this->removeFromCartForm((int)$product['id']);
+                    $productsSortByTaxRate[$index]['products'][$productIndex]['form']
+                        = $form->createView();
+                }
+            }
+        }
+
+        return $productsSortByTaxRate;
+    }
+
+    private function removeFromCartForm(int $id) : \Symfony\Component\Form\Form
+    {
+        return $this->createFormBuilder()
+            ->setAction(
+                $this->generateUrl('product_remove_from_cart', array('id' => $id))
+            )
+            ->setMethod('DELETE')
+            ->getForm()
+        ;
     }
 }

@@ -10,10 +10,10 @@ namespace FitatuBundle\Repository;
  */
 class ProductRepository extends \Doctrine\ORM\EntityRepository
 {
-	public function findOne(int $productId)
-	{
-    	return $this->findOneBy(array(
-    		'id' => $productId,
-    	));
-	}
+    public function findOne(int $productId)
+    {
+        return $this->findOneBy(array(
+            'id' => $productId,
+        ));
+    }
 }

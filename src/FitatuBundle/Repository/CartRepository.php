@@ -17,11 +17,11 @@ class CartRepository extends \Doctrine\ORM\EntityRepository
         int $cartId,
         int $clientId
     ) {
-    	return $this->findOneBy(array(
-    		'product' => $product,
-    		'cartId' => $cartId,
-    		'clientId' => $clientId
-    	));
+        return $this->findOneBy(array(
+            'product' => $product,
+            'cartId' => $cartId,
+            'clientId' => $clientId
+        ));
     }
 
     public function findProductsInCartAndSortByTaxRate(
@@ -42,5 +42,17 @@ class CartRepository extends \Doctrine\ORM\EntityRepository
             ->getQuery()
             ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY)
         ;
+    }
+
+    public function findById(
+        int $id,
+        int $cartId,
+        int $clientId
+    ) {
+        return $this->findOneBy(array(
+            'id' => $id,
+            'cartId' => $cartId,
+            'clientId' => $clientId
+        ));
     }
 }
