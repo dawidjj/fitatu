@@ -26,6 +26,11 @@
                         <li>
                             <a href="{{ path('product_edit', { 'id': product.id }) }}">edit</a>
                         </li>
+                        <li>
+                            {{ form_start(forms[product.id], {'name': 'form_' ~ product.id}) }}
+                                <input type="submit" value="Add To cart">
+                            {{ form_end(forms[product.id]) }}
+                        </li>
                     </ul>
                 </td>
             </tr>

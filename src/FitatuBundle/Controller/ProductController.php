@@ -3,9 +3,12 @@
 namespace FitatuBundle\Controller;
 
 use FitatuBundle\Entity\Product;
+use FitatuBundle\Entity\Cart;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 /**
  * Product controller.
@@ -22,12 +25,19 @@ class ProductController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        $forms = [];
 
+        $em = $this->getDoctrine()->getManager();
         $products = $em->getRepository('FitatuBundle:Product')->findAll();
+
+        foreach ($products as $product) {
+            $addToCartForm = $this->createAddToCartForm($product);
+            $forms[$product->getId()] = $addToCartForm->createView();
+        }
 
         return $this->render('product/index.html.twig', array(
             'products' => $products,
+            'forms' => $forms
         ));
     }
 
@@ -66,10 +76,12 @@ class ProductController extends Controller
     public function showAction(Product $product)
     {
         $deleteForm = $this->createDeleteForm($product);
+        $addToCartForm = $this->createAddToCartForm($product);
 
         return $this->render('product/show.html.twig', array(
             'product' => $product,
             'delete_form' => $deleteForm->createView(),
+            'add_to_cart_from' => $addToCartForm->createView(),
         ));
     }
 
@@ -82,6 +94,7 @@ class ProductController extends Controller
     public function editAction(Request $request, Product $product)
     {
         $deleteForm = $this->createDeleteForm($product);
+        $addToCartForm = $this->createAddToCartForm($product);
         $editForm = $this->createForm('FitatuBundle\Form\ProductType', $product);
         $editForm->handleRequest($request);
 
@@ -95,6 +108,7 @@ class ProductController extends Controller
             'product' => $product,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
+            'add_to_cart_from' => $addToCartForm->createView(),
         ));
     }
 
@@ -118,6 +132,7 @@ class ProductController extends Controller
         return $this->redirectToRoute('product_index');
     }
 
+
     /**
      * Creates a form to delete a product entity.
      *
@@ -125,11 +140,30 @@ class ProductController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm(Product $product)
+    private function createDeleteForm(Product $product) : \Symfony\Component\Form\Form
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('product_delete', array('id' => $product->getId())))
             ->setMethod('DELETE')
+            ->getForm()
+        ;
+    }
+
+    /**
+     * Creates a form to add to cart a product entity.
+     *
+     * @param Product $product The product entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createAddToCartForm(Product $product) : \Symfony\Component\Form\Form
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('product_add_to_cart'))
+            ->add('product_id', HiddenType::class, array(
+                'data' => $product->getId()
+            ))
+            ->setMethod('POST')
             ->getForm()
         ;
     }

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Cart product list</h1>
+
+    {% for productInCart in productsInCart %}
+        <h4>Products in Tax Rate: {{ productInCart.taxRate }} %:</h4>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Sum item</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for product in productInCart.products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.price }} zł</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.sum }} zł</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
+
+
+{% endblock %}

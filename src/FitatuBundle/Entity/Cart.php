@@ -13,7 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *  uniqueConstraints={@ORM\UniqueConstraint(columns={"cart_id", "product_id"})}
  * )
  * @UniqueEntity(
- *  fields={"cartId","productId"}
+ *  fields={"cartId","product"}
  * )
  * @ORM\Entity(repositoryClass="FitatuBundle\Repository\CartRepository")
  */
@@ -53,7 +53,7 @@ class Cart
      * @ORM\ManyToOne(targetEntity="Product", inversedBy="id")
      * @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=false)
      */
-    private $productId;
+    private $product;
 
     /**
      * Get id
@@ -139,26 +139,40 @@ class Cart
     }
 
     /**
-     * Set productId
+     * Set product
      *
-     * @param \FitatuBundle\Entity\Product $productId
+     * @param \FitatuBundle\Entity\Product $product
      *
      * @return Cart
      */
-    public function setProductId(\FitatuBundle\Entity\Product $productId)
+    public function setProductId(\FitatuBundle\Entity\Product $product)
     {
-        $this->productId = $productId;
+        $this->product = $product;
 
         return $this;
     }
 
     /**
-     * Get productId
+     * Get product
      *
      * @return \FitatuBundle\Entity\Product
      */
-    public function getProductId()
+    public function getProduct()
     {
-        return $this->productId;
+        return $this->product;
+    }
+
+    /**
+     * Set product
+     *
+     * @param \FitatuBundle\Entity\Product $product
+     *
+     * @return Cart
+     */
+    public function setProduct(\FitatuBundle\Entity\Product $product)
+    {
+        $this->product = $product;
+
+        return $this;
     }
 }

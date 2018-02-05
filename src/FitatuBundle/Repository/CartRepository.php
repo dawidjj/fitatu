@@ -2,6 +2,8 @@
 
 namespace FitatuBundle\Repository;
 
+use FitatuBundle\Entity\Product;
+
 /**
  * CartRepository
  *
@@ -10,4 +12,35 @@ namespace FitatuBundle\Repository;
  */
 class CartRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function findOneProductInCart(
+        Product $product,
+        int $cartId,
+        int $clientId
+    ) {
+    	return $this->findOneBy(array(
+    		'product' => $product,
+    		'cartId' => $cartId,
+    		'clientId' => $clientId
+    	));
+    }
+
+    public function findProductsInCartAndSortByTaxRate(
+        int $cartId,
+        int $clientId
+    ) : array {
+        return $this->createQueryBuilder('c')
+            ->addSelect('p')
+            ->addSelect('tr')
+            ->innerJoin('c.product', 'p')
+            ->innerJoin('p.taxRate', 'tr')
+            ->where('c.cartId = :cartId')
+            ->andWhere('c.clientId = :clientId')
+            ->setParameter('cartId', $cartId)
+            ->setParameter('clientId', $clientId)
+            ->orderBy('tr.value', 'ASC')
+            ->addOrderBy('c.id', 'ASC')
+            ->getQuery()
+            ->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY)
+        ;
+    }
 }
