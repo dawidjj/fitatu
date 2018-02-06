@@ -92,7 +92,7 @@ class Cart
         return $result;
     }
 
-    private function getProduct(int $productId) : ProductEntity
+    private function getProduct(int $productId) : ?ProductEntity
     {
         return $this->entityManager
             ->getRepository(ProductEntity::class)
@@ -120,7 +120,7 @@ class Cart
         $this->entityManager->flush();
     }
 
-    private function getProductInCart(ProductEntity $product) //: ?CartEntity
+    private function getProductInCart(ProductEntity $product) : ?CartEntity
     {
         return $this->entityManager
             ->getRepository(CartEntity::class)
@@ -146,7 +146,7 @@ class Cart
         return $result;
     }
 
-    private function getPositionInCart(int $positionId)
+    private function getPositionInCart(int $positionId) : ?CartEntity
     {
         return $this->entityManager
             ->getRepository(CartEntity::class)
